@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>مكتبة حكايات الأطفال - قصص قبل النوم</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;800;900&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg-main: #0c101d;
+      --bg-card: #141a2e;
+      --bg-soft: #1c243f;
+      --border-soft: rgba(255, 255, 255, 0.08);
+      --border-accent: rgba(168, 85, 247, 0.45);
+      --text-main: #f3f4f6;
+      --text-muted: #9ca3af;
+      --accent-purple: #a855f7;
+      --accent-amber: #fbbf24;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: "Cairo", system-ui, -apple-system, sans-serif;
+      background:
+        radial-gradient(circle at 18% 12%, rgba(168, 85, 247, 0.14), transparent 42%),
+        radial-gradient(circle at 85% 88%, rgba(251, 191, 36, 0.08), transparent 45%),
+        var(--bg-main);
+      color: var(--text-main);
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .container {
+      width: 100%;
+      max-width: 820px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    /* Header */
+    .header {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 16px 20px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .moon-icon {
+      width: 46px;
+      height: 46px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.2), rgba(168, 85, 247, 0.24));
+      border: 1px solid rgba(251, 191, 36, 0.35);
+      display: grid;
+      place-items: center;
+      font-size: 24px;
+    }
+
+    .brand h1 {
+      margin: 0;
+      font-size: 1.18rem;
+      font-weight: 800;
+    }
+
+    .brand p {
+      margin: 2px 0 0;
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .badge-pill {
+      font-size: 0.78rem;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid var(--border-soft);
+      color: var(--text-muted);
+      font-weight: 700;
+    }
+
+    .badge-pill.connected {
+      background: rgba(34, 197, 94, 0.14);
+      border-color: rgba(34, 197, 94, 0.35);
+      color: #86efac;
+    }
+
+    /* Secret Number / Story Code Search Box (Decoy UI) */
+    .search-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 20px;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .search-label {
+      font-size: 0.88rem;
+      font-weight: 700;
+      color: #e5e7eb;
+    }
+
+    .search-row {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 190px;
+      background: var(--bg-main);
+      border: 1px solid var(--border-soft);
+      border-radius: 12px;
+      padding: 11px 14px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.95rem;
+      outline: none;
+      transition: border-color 0.2s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--accent-purple);
+    }
+
+    .btn {
+      border: none;
+      border-radius: 12px;
+      padding: 11px 18px;
+      font-family: inherit;
+      font-size: 0.88rem;
+      font-weight: 800;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: transform 0.15s ease, opacity 0.15s ease;
+    }
+
+    .btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #9333ea, #7e22ce);
+      color: #fff;
+      box-shadow: 0 8px 20px rgba(147, 51, 234, 0.3);
+    }
+
+    .btn-secondary {
+      background: var(--bg-soft);
+      color: var(--text-main);
+      border: 1px solid var(--border-soft);
+    }
+
+    .btn-record {
+      background: rgba(239, 68, 68, 0.18);
+      color: #fca5a5;
+      border: 1px solid rgba(239, 68, 68, 0.45);
+    }
+
+    .btn-record.recording {
+      background: #dc2626;
+      color: #fff;
+      animation: pulse 1.2s infinite;
+    }
+
+    .btn-save {
+      background: linear-gradient(135deg, #16a34a, #15803d);
+      color: #fff;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.72; }
+    }
+
+    /* Decoy Public Kids Stories */
+    .section-title {
+      font-size: 1rem;
+      font-weight: 800;
+      margin: 0 0 10px;
+      color: #e9d5ff;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .public-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+      gap: 12px;
+    }
+
+    .kid-story-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-soft);
+      border-radius: 18px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .kid-story-card .emoji {
+      font-size: 28px;
+    }
+
+    .kid-story-card h3 {
+      margin: 0;
+      font-size: 0.96rem;
+      font-weight: 800;
+    }
+
+    .kid-story-card p {
+      margin: 0;
+      font-size: 0.83rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+    }
+
+    /* Private Audio Stories Vault (Shown only after entering secret number) */
+    .private-vault {
+      display: none;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .private-vault.unlocked {
+      display: flex;
+    }
+
+    .vault-banner {
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      border-radius: 18px;
+      padding: 14px 18px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .vault-banner strong {
+      color: #e9d5ff;
+      font-size: 0.96rem;
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .story-slot {
+      background: var(--bg-card);
+      border: 1px solid var(--border-accent);
+      border-radius: 20px;
+      padding: 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.35);
+    }
+
+    .slot-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .slot-num {
+      font-size: 1rem;
+      font-weight: 900;
+      color: #fde68a;
+    }
+
+    .slot-date {
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+
+    .slot-title-display {
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #f3f4f6;
+      margin: 0;
+    }
+
+    audio {
+      width: 100%;
+      height: 42px;
+      border-radius: 12px;
+      outline: none;
+    }
+
+    .empty-audio {
+      background: rgba(12, 16, 29, 0.75);
+      border: 1px dashed rgba(255, 255, 255, 0.14);
+      border-radius: 14px;
+      padding: 16px;
+      text-align: center;
+      font-size: 0.84rem;
+      color: var(--text-muted);
+    }
+
+    /* Recorder / Uploader Drawer inside each slot */
+    .editor-box {
+      border-top: 1px solid var(--border-soft);
+      padding-top: 12px;
+      display: none;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .editor-box.open {
+      display: flex;
+    }
+
+    .editor-input {
+      width: 100%;
+      background: var(--bg-main);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 9px 12px;
+      color: var(--text-main);
+      font-family: inherit;
+      font-size: 0.86rem;
+      outline: none;
+    }
+
+    .rec-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .rec-timer {
+      font-size: 0.82rem;
+      font-weight: 800;
+      color: #fca5a5;
+      min-width: 48px;
+    }
+
+    .file-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: var(--bg-soft);
+      border: 1px solid var(--border-soft);
+      border-radius: 10px;
+      padding: 8px 12px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      cursor: pointer;
+    }
+
+    .file-label input {
+      display: none;
+    }
+
+    .status-note {
+      font-size: 0.78rem;
+      color: #a7f3d0;
+    }
+
+    @media (max-width: 720px) {
+      .slots-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="header">
+      <div class="brand">
+        <div class="moon-icon">🌙</div>
+        <div>
+          <h1>مكتبة حكايات الأطفال</h1>
+          <p>قصص هادئة وممتعة قبل النوم</p>
+        </div>
+      </div>
+      <div class="badge-pill" id="dbStatusBadge">جاهز</div>
+    </header>
+
+    <!-- Decoy Search / Secret Number Entry -->
+    <section class="search-card" id="gateCard">
+      <label class="search-label" for="secretNumberInput">رقم الحكاية أو رمز المكتبة:</label>
+      <div class="search-row">
+        <input
+          type="password"
+          inputmode="numeric"
+          id="secretNumberInput"
+          class="search-input"
+          placeholder="أدخل الرقم..."
+          autocomplete="off"
+        />
+        <button type="button" class="btn btn-primary" id="confirmCodeBtn">عرض الحكايات</button>
+      </div>
+    </section>
+
+    <!-- Private 2 Audio Stories Section (Hidden until secret number is confirmed) -->
+    <section class="private-vault" id="privateVault">
+      <div class="vault-banner">
+        <div>
+          <strong>🎧 حكايات الليلة الصوتية (1 و 2)</strong>
+        </div>
+        <div style="display:flex; gap:8px; flex-wrap:wrap;">
+          <button type="button" class="btn btn-secondary" id="toggleStudioBtn">🎙️ إضافة / تسجيل حكاية</button>
+          <button type="button" class="btn btn-secondary" id="lockVaultBtn">🔒 إخفاء</button>
+        </div>
+      </div>
+
+      <div class="slots-grid">
+        <!-- Story 1 -->
+        <article class="story-slot">
+          <div class="slot-header">
+            <span class="slot-num">✨ الحكاية 1</span>
+            <span class="slot-date" id="date1"></span>
+          </div>
+          <h2 class="slot-title-display" id="titleDisplay1">حكاية الليلة الأولى</h2>
+          <div id="playerWrap1">
+            <div class="empty-audio">لم يتم إضافة تسجيل صوتي للحكاية 1 بعد.</div>
+          </div>
+
+          <div class="editor-box" id="editor1">
+            <input type="text" class="editor-input" id="titleInput1" placeholder="عنوان الحكاية 1 (اختياري)" />
+            <div class="rec-controls">
+              <button type="button" class="btn btn-record" id="recBtn1">🎙️ ابدأ التسجيل</button>
+              <span class="rec-timer" id="timer1">00:00</span>
+              <label class="file-label">
+                📁 اختر ملف صوتي
+                <input type="file" accept="audio/*" id="fileInput1" />
+              </label>
+            </div>
+            <audio id="previewAudio1" controls style="display:none;"></audio>
+            <button type="button" class="btn btn-save" id="saveBtn1" disabled>💾 حفظ ونشر الحكاية 1</button>
+            <div class="status-note" id="note1"></div>
+          </div>
+        </article>
+
+        <!-- Story 2 -->
+        <article class="story-slot">
+          <div class="slot-header">
+            <span class="slot-num">🌟 الحكاية 2</span>
+            <span class="slot-date" id="date2"></span>
+          </div>
+          <h2 class="slot-title-display" id="titleDisplay2">حكاية الليلة الثانية</h2>
+          <div id="playerWrap2">
+            <div class="empty-audio">لم يتم إضافة تسجيل صوتي للحكاية 2 بعد.</div>
+          </div>
+
+          <div class="editor-box" id="editor2">
+            <input type="text" class="editor-input" id="titleInput2" placeholder="عنوان الحكاية 2 (اختياري)" />
+            <div class="rec-controls">
+              <button type="button" class="btn btn-record" id="recBtn2">🎙️ ابدأ التسجيل</button>
+              <span class="rec-timer" id="timer2">00:00</span>
+              <label class="file-label">
+                📁 اختر ملف صوتي
+                <input type="file" accept="audio/*" id="fileInput2" />
+              </label>
+            </div>
+            <audio id="previewAudio2" controls style="display:none;"></audio>
+            <button type="button" class="btn btn-save" id="saveBtn2" disabled>💾 حفظ ونشر الحكاية 2</button>
+            <div class="status-note" id="note2"></div>
+          </div>
+        </article>
+      </div>
+    </section>
+
+    <!-- Public Decoy Kids Stories (Always visible so anyone else sees a normal kids website) -->
+    <section id="publicLibrary">
+      <h2 class="section-title">📚 قصص قصيرة للأطفال</h2>
+      <div class="public-grid">
+        <div class="kid-story-card">
+          <div class="emoji">🐇</div>
+          <h3>الأرنب الصغير والسحابة</h3>
+          <p>في غابة هادئة، نظر الأرنب الصغير إلى السماء ورأى سحابة بيضاء تشبه القطن، فتمنى لها ليلة سعيدة ونام بهدوء تحت الشجرة.</p>
+        </div>
+        <div class="kid-story-card">
+          <div class="emoji">🐢</div>
+          <h3>السلحفاة والنجوم</h3>
+          <p>كل مساء كانت السلحفاة تعد النجوم اللامعة فوق البحيرة الصافية، حتى تغمض عينيها على صوت الماء الهادئ.</p>
+        </div>
+        <div class="kid-story-card">
+          <div class="emoji">🦉</div>
+          <h3>البومة الحكيمة والقمر</h3>
+          <p>سألت البومة الصغيرة القمر: لماذا تضيء في الليل؟ فأجابها القمر: لأحرس أحلام الأطفال الجميلة حتى الصباح.</p>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import {
+      getDatabase,
+      ref,
+      set,
+      onValue
+    } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-database.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDhDmYte0A_sZtC5ct4ehIlDozG-rLj7bs",
+      authDomain: "bedtime-stories-11fd9.firebaseapp.com",
+      databaseURL: "https://bedtime-stories-11fd9-default-rtdb.firebaseio.com",
+      projectId: "bedtime-stories-11fd9",
+      storageBucket: "bedtime-stories-11fd9.firebasestorage.app",
+      messagingSenderId: "550135173811",
+      appId: "1:550135173811:web:ca54647c0450ac32ad96c6"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getDatabase(app);
+
+    const secretInput = document.getElementById("secretNumberInput");
+    const confirmCodeBtn = document.getElementById("confirmCodeBtn");
+    const privateVault = document.getElementById("privateVault");
+    const toggleStudioBtn = document.getElementById("toggleStudioBtn");
+    const lockVaultBtn = document.getElementById("lockVaultBtn");
+    const dbStatusBadge = document.getElementById("dbStatusBadge");
+
+    let activeSecretKey = "";
+    let unsubscribeStories = null;
+    let studioOpen = false;
+
+    const pendingAudio = { 1: null, 2: null };
+    const mediaRecorders = { 1: null, 2: null };
+    const timerIntervals = { 1: null, 2: null };
+
+    function sanitizeKey(raw) {
+      return (raw || "").trim().replace(/[.#$/\[\]]/g, "_");
+    }
+
+    function formatDate(ts) {
+      if (!ts) return "";
+      try {
+        return new Date(ts).toLocaleDateString("ar-EG", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        });
+      } catch {
+        return "";
+      }
+    }
+
+    function renderSlot(slotNum, data) {
+      const titleEl = document.getElementById(`titleDisplay${slotNum}`);
+      const dateEl = document.getElementById(`date${slotNum}`);
+      const wrapEl = document.getElementById(`playerWrap${slotNum}`);
+
+      if (!data || !data.audioData) {
+        titleEl.textContent = slotNum === 1 ? "حكاية الليلة الأولى" : "حكاية الليلة الثانية";
+        dateEl.textContent = "";
+        wrapEl.innerHTML = `<div class="empty-audio">لم يتم إضافة تسجيل صوتي للحكاية ${slotNum} بعد.</div>`;
+        return;
+      }
+
+      titleEl.textContent = data.title || (slotNum === 1 ? "حكاية الليلة الأولى" : "حكاية الليلة الثانية");
+      dateEl.textContent = formatDate(data.updatedAt);
+      wrapEl.innerHTML = `<audio controls preload="metadata" src="${data.audioData}"></audio>`;
+    }
+
+    function unlockWithSecret(rawCode) {
+      const clean = sanitizeKey(rawCode);
+      if (!clean) return;
+
+      activeSecretKey = clean;
+      privateVault.classList.add("unlocked");
+      secretInput.value = "";
+
+      if (typeof unsubscribeStories === "function") {
+        unsubscribeStories();
+      }
+
+      dbStatusBadge.textContent = "جاري التحميل...";
+      const roomRef = ref(db, `secret_stories/${clean}`);
+
+      unsubscribeStories = onValue(
+        roomRef,
+        (snapshot) => {
+          dbStatusBadge.textContent = "متصل";
+          dbStatusBadge.classList.add("connected");
+          const val = snapshot.val() || {};
+          renderSlot(1, val.story_1 || null);
+          renderSlot(2, val.story_2 || null);
+        },
+        () => {
+          dbStatusBadge.textContent = "تحقق من Rules";
+          dbStatusBadge.classList.remove("connected");
+        }
+      );
+    }
+
+    confirmCodeBtn.addEventListener("click", () => {
+      unlockWithSecret(secretInput.value);
+    });
+
+    secretInput.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        unlockWithSecret(secretInput.value);
+      }
+    });
+
+    lockVaultBtn.addEventListener("click", () => {
+      if (typeof unsubscribeStories === "function") {
+        unsubscribeStories();
+        unsubscribeStories = null;
+      }
+      activeSecretKey = "";
+      privateVault.classList.remove("unlocked");
+      studioOpen = false;
+      document.getElementById("editor1").classList.remove("open");
+      document.getElementById("editor2").classList.remove("open");
+      dbStatusBadge.textContent = "جاهز";
+      dbStatusBadge.classList.remove("connected");
+    });
+
+    toggleStudioBtn.addEventListener("click", () => {
+      studioOpen = !studioOpen;
+      document.getElementById("editor1").classList.toggle("open", studioOpen);
+      document.getElementById("editor2").classList.toggle("open", studioOpen);
+    });
+
+    function blobToDataUrl(blob) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onloadend = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    }
+
+    function setupSlotRecorder(slotNum) {
+      const recBtn = document.getElementById(`recBtn${slotNum}`);
+      const timerEl = document.getElementById(`timer${slotNum}`);
+      const fileInput = document.getElementById(`fileInput${slotNum}`);
+      const previewAudio = document.getElementById(`previewAudio${slotNum}`);
+      const saveBtn = document.getElementById(`saveBtn${slotNum}`);
+      const titleInput = document.getElementById(`titleInput${slotNum}`);
+      const noteEl = document.getElementById(`note${slotNum}`);
+
+      function setReadyAudio(dataUrl) {
+        pendingAudio[slotNum] = dataUrl;
+        previewAudio.src = dataUrl;
+        previewAudio.style.display = "block";
+        saveBtn.disabled = false;
+        noteEl.textContent = "التسجيل جاهز للحفظ والنشر.";
+      }
+
+      recBtn.addEventListener("click", async () => {
+        if (mediaRecorders[slotNum] && mediaRecorders[slotNum].state === "recording") {
+          mediaRecorders[slotNum].stop();
+          return;
+        }
+
+        try {
+          const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          const chunks = [];
+          const options = MediaRecorder.isTypeSupported("audio/webm;codecs=opus")
+            ? { mimeType: "audio/webm;codecs=opus", audioBitsPerSecond: 32000 }
+            : { audioBitsPerSecond: 32000 };
+          const recorder = new MediaRecorder(stream, options);
+          mediaRecorders[slotNum] = recorder;
+
+          let seconds = 0;
+          timerEl.textContent = "00:00";
+          recBtn.textContent = "⏹️ إيقاف";
+          recBtn.classList.add("recording");
+          noteEl.textContent = "جاري التسجيل بصوتك...";
+
+          timerIntervals[slotNum] = setInterval(() => {
+            seconds += 1;
+            const mins = String(Math.floor(seconds / 60)).padStart(2, "0");
+            const secs = String(seconds % 60).padStart(2, "0");
+            timerEl.textContent = `${mins}:${secs}`;
+          }, 1000);
+
+          recorder.ondataavailable = (ev) => {
+            if (ev.data && ev.data.size > 0) chunks.push(ev.data);
+          };
+
+          recorder.onstop = async () => {
+            clearInterval(timerIntervals[slotNum]);
+            stream.getTracks().forEach((t) => t.stop());
+            recBtn.textContent = "🎙️ ابدأ التسجيل";
+            recBtn.classList.remove("recording");
+
+            const blob = new Blob(chunks, { type: recorder.mimeType || "audio/webm" });
+            const dataUrl = await blobToDataUrl(blob);
+            setReadyAudio(dataUrl);
+          };
+
+          recorder.start();
+        } catch {
+          noteEl.textContent = "تعذر الوصول للميكروفون — يمكنك اختيار ملف صوتي من جهازك.";
+        }
+      });
+
+      fileInput.addEventListener("change", async (e) => {
+        const file = e.target.files && e.target.files[0];
+        if (!file) return;
+        if (file.size > 6 * 1024 * 1024) {
+          noteEl.textContent = "يفضل أن يكون حجم الملف الصوتي أقل من 6 ميجابايت.";
+          return;
+        }
+        const dataUrl = await blobToDataUrl(file);
+        setReadyAudio(dataUrl);
+      });
+
+      saveBtn.addEventListener("click", async () => {
+        if (!activeSecretKey || !pendingAudio[slotNum]) return;
+        saveBtn.disabled = true;
+        noteEl.textContent = "جاري رفع الحكاية...";
+
+        try {
+          const slotRef = ref(db, `secret_stories/${activeSecretKey}/story_${slotNum}`);
+          await set(slotRef, {
+            title: (titleInput.value || "").trim(),
+            audioData: pendingAudio[slotNum],
+            updatedAt: Date.now()
+          });
+          pendingAudio[slotNum] = null;
+          previewAudio.style.display = "none";
+          previewAudio.src = "";
+          titleInput.value = "";
+          noteEl.textContent = "تم حفظ ونشر الحكاية بنجاح!";
+        } catch {
+          saveBtn.disabled = false;
+          noteEl.textContent = "حدث خطأ أثناء الحفظ — تأكد من إعدادات Rules.";
+        }
+      });
+    }
+
+    setupSlotRecorder(1);
+    setupSlotRecorder(2);
+  </script>
+</body>
+</html>
